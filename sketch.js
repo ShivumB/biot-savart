@@ -156,13 +156,13 @@ function calcBiotSavart(wires) {
   
   for(let i = 0; i < wires.length; i++) {
 
+    if(!wires[i][1]) continue;
+    
     //SIGMA of delta B
     for(let j = 1; j < wires[i][0].length; j++) {
 
-      if(!wires[i][1]) continue;
-
       deltaL = [wires[i][0][j][0] - wires[i][0][j-1][0], wires[i][0][j][1] - wires[i][0][j-1][1]];
-      deltaR = [width/2 - wires[i][0][j][0], height/2 - wires[i][0][j][1]];
+      deltaR = [width/2 - (wires[i][0][j][0] + wires[i][0][j-1][0])/2, height/2 - (wires[i][0][j][1] + wires[i][0][j-1][1])/2];
 
       rMag = deltaR[0] * deltaR[0] + deltaR[1]*deltaR[1];
 
@@ -171,6 +171,17 @@ function calcBiotSavart(wires) {
 
       field += crossProd / (rMag) * wires[i][1];
     }
+    
+    //add the segment between last and first point! important.
+    deltaL = [wires[i][0][0][0] - wires[i][0][wires.length-1][0], wires[i][0][0][1] - wires[i][0][wires.length-1][1]];
+    
+    deltaR = [width/2 - (wires[i][0][0][0] + wires[i][0][wires.length-1][0])/2, height/2 - (wires[i][0][0][1] + wires[i][0][wires.length-1][1])/2];
+    rMag = deltaR[0] * deltaR[0] + deltaR[1]*deltaR[1];
+
+    crossProd = deltaL[0] * deltaR[1] - deltaL[1] * deltaR[0];
+    crossProd /= Math.sqrt(rMag)
+
+    field += crossProd / (rMag) * wires[i][1];
 
   }
 
