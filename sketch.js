@@ -4,6 +4,8 @@ var pointList = [];
 var batteries = [];
 var batterySprite;
 
+var keyReset = true;
+
 var sel = 0;
 
 var field = 0;
@@ -23,6 +25,11 @@ function setup() {
 function draw() {
 
   background(237, 181, 37);
+
+  if(keyReset && key == "") {
+    wires.splice(wires.length - 1, 1);
+    keyReset = false;
+  }
 
   if(field < 0) {
     fill(0);
@@ -182,6 +189,10 @@ class Battery {
   show() {
     image(batterySprite, this.x, this.y, 37, 69);
   }
+}
+
+function keyPressed() {
+  keyReset = true;
 }
 
 function checkCircuits(batteries, wires) {
