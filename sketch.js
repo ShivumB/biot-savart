@@ -56,8 +56,14 @@ function draw() {
         fill(255,0,0);
         ellipse(wires[i][0][0][0], wires[i][0][0][1], 5, 5);
         ellipse(wires[i][0][wires[i][0].length - 1][0], wires[i][0][wires[i][0].length - 1][1], 5, 5);
-        ellipse(wires[i][0][j-1][0] + t * (wires[i][0][j][0] - wires[i][0][j-1][0]),
-        wires[i][0][j-1][1] + t * (wires[i][0][j][1] - wires[i][0][j-1][1]), 5, 5);
+
+        if(wires[i][2] == 1) {
+          ellipse(wires[i][0][j-1][0] + t * (wires[i][0][j][0] - wires[i][0][j-1][0]),
+          wires[i][0][j-1][1] + t * (wires[i][0][j][1] - wires[i][0][j-1][1]), 5, 5);
+        } else {
+          ellipse(wires[i][0][j][0] + t * (wires[i][0][j-1][0] - wires[i][0][j][0]),
+          wires[i][0][j][1] + t * (wires[i][0][j-1][1] - wires[i][0][j][1]), 5, 5);
+        }
       } else {
         fill(0);
         ellipse(wires[i][0][0][0], wires[i][0][0][1], 5, 5);
@@ -175,9 +181,6 @@ class Battery {
 
   show() {
     image(batterySprite, this.x, this.y, 37, 69);
-
-    //top hitbox is 30 tall
-    //rect(this.x, this.y, 37, 30);
   }
 }
 
