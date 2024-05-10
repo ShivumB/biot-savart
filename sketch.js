@@ -31,15 +31,16 @@ function draw() {
     line(width/2 - 5, height/2 - 5, width/2 + 5, height/2 + 5);
     line(width/2 + 5, height/2 - 5, width/2 - 5, height/2 + 5);
   }
+
+
+  for(let i = 0; i < batteries.length; i++)
+    batteries[i].show();
   
   for(let i = 0; i < nodes.length; i++) {
     nodes[i].update(batteries);
     nodes[i].show();
   }
   
-  for(let i = 0; i < batteries.length; i++)
-    batteries[i].show();
-
   textAlign(CENTER, TOP);
   textSize(25);
   fill(0);
