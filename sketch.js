@@ -69,7 +69,15 @@ function mouseClicked() {
   if(mouseX < width/16) {
     sel = Math.floor(mouseY / (height/6));
   } else {
-    if(sel == 1) {
+    if(sel == 0) {
+      nodes.push(new Node(mouseX, mouseY));
+      
+      for(let i = 0; i < nodes.length - 1; i++) {
+        nodes[i].checkNode(nodes[nodes.length - 1]);
+        nodes[nodes.length - 1].checkNode(nodes[i]);
+      }
+
+    } else if(sel == 1) {
       batteries.push(new Battery(mouseX - 37/2, mouseY - 69/2));
     }
 
@@ -78,15 +86,11 @@ function mouseClicked() {
 
 function mouseDragged() {
   if(sel == 0) {
-    
-    if(sel == 0) {
-      nodes.push(new Node(mouseX, mouseY));
+    nodes.push(new Node(mouseX, mouseY));
       
-      for(let i = 0; i < nodes.length - 1; i++) {
-        nodes[i].checkNode(nodes[nodes.length - 1]);
-        nodes[nodes.length - 1].checkNode(nodes[i]);
-      }
-      
+    for(let i = 0; i < nodes.length - 1; i++) {
+      nodes[i].checkNode(nodes[nodes.length - 1]);
+      nodes[nodes.length - 1].checkNode(nodes[i]);
     }
   }
 }
@@ -127,19 +131,15 @@ class Node {
   }
   
   show() {
-    
     noStroke();
     
-    
-    if(this.full == 0) fill(255, 0, 0, 100);
+    if(this.full <= 0) fill(255, 0, 0, 100);
     else fill (0, 255, 255, 100);
     ellipse(this.x, this.y, 20, 20);
     
-    if(this.full == 0) fill(0);
+    if(this.full <= 0) fill(0);
     else fill(0, 0, 255);
     ellipse(this.x, this.y, 5, 5);
-    
-    
   }
   
   update(batteries) {
@@ -147,46 +147,31 @@ class Node {
     this.t++;
     this.t %= 10;
     if(this.t != 0) return;
-    
-    if(this.full == 0) {
-      
-      for(let i = 0; i < batteries.length; i++) {
-        //receive from electron from positive terminal
-        if(this.x > batteries[i].x && this.x < batteries[i].x + 37 && this.y > batteries[i].y && this.y < batteries[i].y + 30) {
-          this.full = 1;
-          break;
-        }
+       
+    for(let i = 0; i < batteries.length; i++) {
+      //receive from positive terminal
+      if(this.x > batteries[i].x && this.x < batteries[i].x + 37 && this.y > batteries[i].y && this.y < batteries[i].y + 30) {
+        this.full++;
       }
-      
-    } else {
-      
-      //donate to negative terminal
-      for(let i = 0; i < batteries.length; i++) {
-        //check collision with positive terminal
-        if(this.x > batteries[i].x && this.x < batteries[i].x + 37 && this.y > batteries[i].y + 30 && this.y < batteries[i].y + 69) {
-          this.full = 0;
-          break;
-        }
-      }
-      
-      if(this.full == 0) return;
-      
-      let recipients = [];
-      //first, get indices of available recipients
-      for(let i = 0; i < this.nodes.length; i++)
-        if(this.nodes[i].full == 0) recipients.push(i);
-      
-      if(recipients.length > 0) {
-        
-        //then choose randomly
-      let chosen = recipients[Math.floor(Math.random() * recipients.length)];
-    
-        //then donate
-        this.nodes[chosen].full = 1;
-        this.full = 0;
+    }
+
+    //donate to negative terminal
+    for(let i = 0; i < batteries.length; i++) {
+      if(this.x > batteries[i].x && this.x < batteries[i].x + 37 && this.y > batteries[i].y + 30 && this.y < batteries[i].y + 69) {
+        this.full = Math.max(0, this.full - 1);
       }
     }
     
+    if(this.full <= 0 || this.nodes.length == 0) return;
+    
+    //get the index of the lowest electron filled point
+    let mindex = 0;
+    for(let i = 0; i < this.nodes.length; i++) {
+      if(this.nodes[i].full <= this.nodes[mindex].full) mindex = i;
+    }
+
+    this.nodes[mindex].full ++;
+    this.full --; 
   }
   
 }
