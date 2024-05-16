@@ -7,10 +7,6 @@ var sel = 0;
 
 var field = 0;
 
-function preload() {
-  batterySprite = loadImage("battery.png");
-}
-
 function calcBiotSavart(nodes) {
   let field = 0;
   
@@ -69,7 +65,7 @@ function draw() {
     rect(0, i * height/6, width/16, height/6);
   }
 
-  image(batterySprite, 20, 10 + height/6, 37, 69);
+  rect(20, 10 + height/6, 37, 69);
   
   fill(0);
   stroke(0);
@@ -91,7 +87,8 @@ function mouseClicked() {
       }
 
     } else if(sel == 1) {
-      batteries.push(new Battery(mouseX - 37/2, mouseY - 69/2));
+      batteries.push(new Battery(mouseX - 37, mouseY - 69));
+      sel = 2;
     }
 
   }
@@ -113,14 +110,32 @@ class Battery {
   constructor(x, y) {
     this.x = x;
     this.y = y;
+    
     this.curr = 1;
+    
+    this.inp = createInput("1");
+    this.inp.addClass("textbox");
+    this.inp.attribute("type", "number");
+    this.inp.position(this.x + 37 - 10, this.y + 69 - 10);
+    
   }
 
   show() {
     noFill();
     stroke(0);
     strokeWeight(2);
-    image(batterySprite, this.x, this.y, 37, 69);
+
+    rect(this.x, this.y, 37*2, 69*2);
+    
+    noStroke();
+    fill(255, 0, 0, 75);
+    rect(this.x, this.y + 69, 37*2, 69);
+    
+    fill(0, 100, 255, 75);
+    rect(this.x, this.y, 37*2, 69);
+    
+    if(!isNaN(this.inp.value())) this.curr = this.inp.value();
+    
   }
 }
 
@@ -131,8 +146,6 @@ class Node {
     this.y = y;
     
     this.t = 0;
-    
-    
     
     this.rHat = [width/2 - x, height/2 - y];
     let rMag = this.rHat[0] * this.rHat[0] + this.rHat[1] * this.rHat[1];
@@ -179,20 +192,24 @@ class Node {
     this.recPos[1] = 0;
     
     for(let i = 0; i < batteries.length; i++) {
+      
+      console.log(batteries[i].curr);
+      
       //receive from positive terminal
-      if(this.x > batteries[i].x && this.x < batteries[i].x + 37 && this.y > batteries[i].y && this.y < batteries[i].y + 30) {
+      if(this.x > batteries[i].x && this.x < batteries[i].x + 37*2 && this.y > batteries[i].y && this.y < batteries[i].y + 30*2) {
         this.full += batteries[i].curr;
       }
     }
 
     //donate to negative terminal
     for(let i = 0; i < batteries.length; i++) {
-      if(this.x > batteries[i].x && this.x < batteries[i].x + 37 && this.y > batteries[i].y + 30 && this.y < batteries[i].y + 69) {
+      
+      if(this.x > batteries[i].x && this.x < batteries[i].x + 37*2 && this.y > batteries[i].y + 30*2 && this.y < batteries[i].y + 69*2) {
         
         this.full = Math.floor(this.full/2);
         
-        this.recPos[0] = batteries[i].x + 18 - this.x;
-        this.recPos[1] = batteries[i].y + 49 - this.y;
+        this.recPos[0] = batteries[i].x + 18*2 - this.x;
+        this.recPos[1] = batteries[i].y + 49*2 - this.y;
         return;
       }
     }
@@ -208,7 +225,7 @@ class Node {
     if(this.full <= this.nodes[mindex].full + 1) return;
     
     
-    const donateAmount = Math.floor(this.full - this.nodes[mindex].full/2);
+    let donateAmount = Math.floor(this.full - this.nodes[mindex].full/2);
     
     this.nodes[mindex].full += donateAmount;
     
@@ -220,4 +237,3 @@ class Node {
   }
   
 }
-
