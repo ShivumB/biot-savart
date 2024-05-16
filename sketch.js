@@ -204,7 +204,7 @@ class Node {
       
       if(this.x > batteries[i].x && this.x < batteries[i].x + 37*2 && this.y > batteries[i].y + 30*2 && this.y < batteries[i].y + 69*2) {
         
-        this.full = Math.floor(this.full/2);
+        this.full = 0;
         
         this.recPos[0] = batteries[i].x + 18*2 - this.x;
         this.recPos[1] = batteries[i].y + 49*2 - this.y;
