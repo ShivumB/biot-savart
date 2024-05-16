@@ -11,7 +11,7 @@ function calcBiotSavart(nodes) {
   let ans = 0;
   
   for(let i = 0; i < nodes.length; i++) {    
-    field += nodes[i].curr * (nodes[i].recPos[0] * nodes[i].rHat[1] - nodes[i].recPos[1] * nodes[i].rHat[0]) * nodes[i].coeff;
+    ans += nodes[i].curr * (nodes[i].recPos[0] * nodes[i].rHat[1] - nodes[i].recPos[1] * nodes[i].rHat[0]) * nodes[i].coeff;
   }
     
   return ans; 
@@ -183,11 +183,9 @@ class Node {
   }
   
   update(batteries) {
-    
-    this.t++;
-    this.t %= 10;
-    if(this.t != 0) return;
        
+    if(Math.random() > 0.1) return;
+    
     this.recPos[0] = 0;
     this.recPos[1] = 0;
     
@@ -222,7 +220,6 @@ class Node {
     
     if(this.full <= this.nodes[mindex].full + 1) return;
     
-    
     let donateAmount = Math.floor(this.full - this.nodes[mindex].full/2);
     
     this.nodes[mindex].full += donateAmount;
@@ -232,7 +229,6 @@ class Node {
     
     
     this.full -= donateAmount; 
-    
     this.curr = donateAmount;
   }
   
