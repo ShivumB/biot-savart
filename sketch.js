@@ -8,13 +8,13 @@ var sel = 0;
 var field = 0;
 
 function calcBiotSavart(nodes) {
-  let field = 0;
+  let ans = 0;
   
   for(let i = 0; i < nodes.length; i++) {    
     field += nodes[i].curr * (nodes[i].recPos[0] * nodes[i].rHat[1] - nodes[i].recPos[1] * nodes[i].rHat[0]) * nodes[i].coeff;
   }
     
-  return field; 
+  return ans; 
 }
 
 function setup() {
