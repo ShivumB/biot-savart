@@ -8,11 +8,11 @@ main, body, head {
   border: none;
   border-bottom: 3px solid black;
 
-  width:20px;
+  width:40px;
 
   background-color: rgba(0,0,0,0.1);
 
-  font-size:xx-large;
+  font-size:xxx-large;
   font-family: 'Lucida Sans', monospace;
 }
 
