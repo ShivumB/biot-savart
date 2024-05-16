@@ -2,3 +2,25 @@ main, body, head {
     overflow: hidden;
     margin: 0;
 }
+
+.textbox {
+  outline: none;
+  border: none;
+  border-bottom: 3px solid black;
+
+  width:20px;
+
+  background-color: rgba(0,0,0,0.1);
+
+  font-size:xx-large;
+  font-family: 'Lucida Sans', monospace;
+}
+
+.textbox:focus {
+  background-color: rgba(0,0,0,0.3);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  display: none;
+}
